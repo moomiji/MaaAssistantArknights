@@ -349,7 +349,7 @@ bool cvt_single_item_template(const std::filesystem::path& input, const std::fil
 
     cv::Mat src_without_alpha;
     cv::cvtColor(src, src_without_alpha, cv::COLOR_BGRA2BGR);
-    src_without_alpha.copyTo(dst, mask);
+    src.copyTo(dst, mask);
 
     cv::Mat dst_resized;
     const double scale = 720.0 / 1080.0 * 0.975;
