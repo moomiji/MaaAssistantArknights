@@ -331,35 +331,7 @@ bool cvt_single_item_template(const std::filesystem::path& input, const std::fil
         std::cerr << input << " is empty" << std::endl;
         return false;
     }
-    cv::Mat dst;
-    cv::cvtColor(src, dst, cv::COLOR_BGRA2BGR);
-    for (int c = 0; c != src.cols; ++c) {
-        for (int r = 0; r != src.rows; ++r) {
-            auto p = src.at<cv::Vec4b>(c, r);
-            if (p[3] != 255) {
-                dst.at<cv::Vec3b>(c, r) = cv::Vec3b(0, 0, 0);
-            }
-        }
-    }
-    cv::Mat mask;
-    cv::cvtColor(dst, mask, cv::COLOR_BGR2GRAY);
-    cv::inRange(mask, 1, 255, mask);
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
-    cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, element);
-
-    cv::Mat src_without_alpha;
-    cv::cvtColor(src, src_without_alpha, cv::COLOR_BGRA2BGR);
-    src.copyTo(dst, mask);
-
-    cv::Mat dst_resized;
-    const double scale = 720.0 / 1080.0 * 0.975;
-    cv::resize(dst, dst_resized, cv::Size(), scale, scale, cv::INTER_AREA);
-
-    cv::Mat dst_gray;
-    cv::cvtColor(dst_resized, dst_gray, cv::COLOR_BGR2GRAY);
-    dst_resized = dst_resized(cv::boundingRect(dst_gray));
-
-    cv::imwrite(output.string(), dst_resized);
+    cv::imwrite(output.string(), src);
     return true;
 }
 
