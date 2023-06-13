@@ -60,13 +60,8 @@ jobs:
             }
             echo "isAllEqual: "$isAllEqual
             echo "only_sorted=$isAllEqual" >> $env:GITHUB_OUTPUT
-        
-      - name: Cancelling
-        if: steps.check_only_sorted.outputs.only_sorted == 'True'
-        uses: andymckay/cancel-action@0.3
 
       - name: Add files to git
-        if: steps.check_only_sorted.outputs.only_sorted != 'True'
         id: add_files
         run: |
           git status
@@ -88,12 +83,7 @@ jobs:
 
           git pull origin $(git rev-parse --abbrev-ref HEAD) --unshallow --rebase
 
-      - name: Cancelling
-        if: steps.add_files.outputs.have_commits != 'True'
-        uses: andymckay/cancel-action@0.3
-
       - name: Push changes # push the output folder to your repo
-        if: steps.add_files.outputs.have_commits == 'True'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
