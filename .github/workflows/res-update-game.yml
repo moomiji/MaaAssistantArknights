@@ -12,12 +12,11 @@ on:
 
 jobs:
   update-game-resources:
-    if: github.repository_owner == 'MaaAssistantArknights'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.MISTEOWORKFLOW }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Bootstrap MaaDeps
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -97,11 +96,4 @@ jobs:
         if: steps.add_files.outputs.have_commits == 'True'
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.MISTEOWORKFLOW }}
-
-      - name: Release # ref: https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
-        if: steps.add_files.outputs.have_commits == 'True'
-        run: |
-          gh workflow run release-nightly-ota -f release_body="Auto Release of Resource Updates"
-        env:
-          GH_TOKEN: ${{ github.token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
